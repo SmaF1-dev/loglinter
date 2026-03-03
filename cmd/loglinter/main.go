@@ -6,5 +6,8 @@ import (
 )
 
 func main() {
-	singlechecker.Main(analyzer.NewAnalyzer())
+	cfg := analyzer.Config{
+		SensitiveKeywords: []string{"password", "api_key", "token", "secret", "key", "auth", "env", "environment"},
+	}
+	singlechecker.Main(analyzer.NewAnalyzer(cfg))
 }

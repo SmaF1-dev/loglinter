@@ -6,5 +6,17 @@ import (
 )
 
 func New(conf interface{}) ([]*analysis.Analyzer, error) {
-	return []*analysis.Analyzer{analyzer.NewAnalyzer()}, nil
+	var cfg analyzer.Config
+
+	if setting, ok := conf.(map[string]interface{}); ok {
+		if keywords, ok := setting["sensitive_keywords"].([]interface{}); ok {
+			for _, kw := range keywords {
+				if s, ok := kw.(string); ok {
+					cfg.SensitiveKeywords = append(cfg.SensitiveKeywords, s)
+				}
+			}
+		}
+	}
+
+	return []*analysis.Analyzer{analyzer.NewAnalyzer(cfg)}, nil
 }
