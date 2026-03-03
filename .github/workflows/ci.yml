@@ -1,0 +1,21 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+      - name: Run tests
+        run: go test ./analyzer/...
+      - name: Build standalone linter
+        run: go build ./cmd/loglinter
+      - name: Build plugin for golangci-lint
+        run: go build -buildmode=plugin -o loglinter.so ./cmd/plugin
